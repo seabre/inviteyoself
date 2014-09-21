@@ -2,7 +2,7 @@
   inviteyoself
   "0.1.0-SNAPSHOT"
   :description
-  "FIXME: write description"
+  "Allow people to invite themselves to your slack team."
   :ring
   {:handler inviteyoself.handler/app,
    :init inviteyoself.handler/init,
