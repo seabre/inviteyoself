@@ -1,0 +1,25 @@
+{% extends "templates/base.html" %}
+{% block content %}
+<p>This slack team has open invites! Invite yoself!</p>
+
+{% if not fresh %}
+{% if not valid %}
+<div class="error">
+  <span>{{errors.email}}</span>
+</div>
+{% else %}
+<div class="success">
+  <span>Success! You should receive an invite pretty soon.</span>
+</div>
+{% endif %}
+{% endif %}
+<form action="/" method="POST">
+  <p>
+    <strong>Your Email Address</strong>
+    <input type="email" name="email" required placeholder="your email here" {% if not valid %} value={{data.email}} {% endif %}>
+  </p>
+  <div id="invite_submit">
+    <input type="submit" value="Invite Yoself!">
+  </div>
+</form>
+{% endblock %}

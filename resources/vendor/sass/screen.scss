@@ -1,0 +1,41 @@
+@import "vendor/bourbon/bourbon";
+@import "grid-settings";
+@import "vendor/neat/neat";
+@import "base/base";
+@import "vendor/normalize/normalize";
+
+body {
+  background-image:url('/img/seamless_paper_texture.png');
+  background-repeat:repeat;
+}
+
+header {
+  text-align: center;
+  h1 {
+    font-family: 'Pinyon Script', cursive;
+    font-size: $base-font-size * 4;
+  }
+}
+
+section {
+  @include outer-container;
+  max-width: em(640);
+
+  form {
+    @include span-columns(12);
+  }
+}
+
+#invite_submit {
+  //margin-left: auto;
+  //margin-right: 0;
+  text-align: right;
+}
+
+.error {
+  @extend %flash-error;
+}
+
+.success {
+  @extend %flash-success;
+}
