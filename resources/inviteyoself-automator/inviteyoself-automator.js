@@ -28,7 +28,26 @@ casper.waitFor(function check() {
   });
   }, function then() {
     this.sendKeys('textarea[name=emails]', emails);
-    this.click('div#bulk_invites .btn.btn-primary.small_right_margin.api_parse_emails.ladda-button.ladda');
+    this.evaluate(function(emails) {
+      var method = 'users.admin.parseEmails',
+          unixtime = Math.round(new Date().getTime() / 1000),
+          url = TS.boot_data.api_url + method + "?t=" + unixtime + TS.appendQSArgsToUrl(),
+          args = {
+            emails: emails,
+            token: TS.boot_data.api_token
+          },
+          handler = TS.web.admin_invites.onEmailsParsed;
+
+      TS.api.ajax_call(url, method, args, function(data) {
+        if (!data) {
+          data = {};
+        }
+        ok = data.ok ? true : false;
+        if (handler) {
+          handler(ok, data, args)
+        }
+      });
+    }, { emails: emails });
 });
 
 casper.waitForText("We've done our best to guess", function() {
