@@ -1,5 +1,8 @@
 var casper = require('casper').create({
   viewportSize: {width: 950, height: 950},
+  pageSettings: {
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
+  }
 });
 
 var subdomain = casper.cli.get("subdomain"),
