@@ -58,12 +58,6 @@ casper.waitFor(function check() {
   }, { emails: emails });
 });
 
-casper.waitForText("We've done our best to guess", function() {
-  this.click('.btn.btn-primary.small_bottom_margin.api_send_invites.ladda-button.full_width');
-});
-
-casper.waitForText("Invites sent!", function() {
-  this.echo('Invites sent.');
-});
+casper.waitUntilVisible('#invite_sending_success');
 
 casper.run();
