@@ -48,7 +48,7 @@ heroku config:add SLACK_PASSWORD=yourpassword
 ```bash
 heroku config:add DB_HOST=yourhost
 heroku config:add DB_NAME=yourdatabase
-heroku config:add DB_USERNAME=youruser
+heroku config:add DB_USER_NAME=youruser
 heroku config:add DB_USER_PASSWORD=yourpassword
 ```
 
