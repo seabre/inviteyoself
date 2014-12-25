@@ -1,5 +1,8 @@
 var casper = require('casper').create({
   viewportSize: {width: 950, height: 950},
+  pageSettings: {
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
+  }
 });
 
 var subdomain = casper.cli.get("subdomain"),
@@ -23,17 +26,38 @@ casper.waitFor(function check() {
   return this.evaluate(function() {
     return document.querySelector('#bulk_invites').getAttribute('class') === '';
   });
-  }, function then() {
-    this.sendKeys('textarea[name=emails]', emails);
-    this.click('div#bulk_invites .btn.btn-primary.small_right_margin.api_parse_emails.ladda-button.ladda');
+}, function() {
+  this.evaluate(function(emails) {
+    var method = 'users.admin.parseEmails',
+        unixtime = Math.round(new Date().getTime() / 1000),
+        url = TS.boot_data.api_url + method + "?t=" + unixtime,
+        args = {
+          emails: emails,
+          set_active: 'true',
+          token: TS.boot_data.api_token
+        };
+    TS.api.ajax_call(url, method, args, function(data) {
+      data.emails.forEach(function(email) {
+        var method = 'users.admin.invite',
+            unixtime = Math.round(new Date().getTime() / 1000),
+            url = TS.boot_data.api_url + method + "?t=" + unixtime,
+            args = {
+              email: email.email,
+              first_name: email.first_name || '',
+              last_name: email.last_name || '',
+              set_active: 'true',
+              token: TS.boot_data.api_token
+            };
+        TS.api.ajax_call(url, method, args, function(data) {
+          if (data.ok || data.error == 'sent_recently' || data.error == 'already_invited') {
+            document.getElementById('invite_sending_success').style.display = '';
+          }
+        });
+      });
+    });
+  }, { emails: emails });
 });
 
-casper.waitForText("We've done our best to guess", function() {
-  this.click('.btn.btn-primary.small_bottom_margin.api_send_invites.ladda-button.full_width');
-});
-
-casper.waitForText("Invites sent!", function() {
-  this.echo('Invites sent.');
-});
+casper.waitUntilVisible('#invite_sending_success');
 
 casper.run();
