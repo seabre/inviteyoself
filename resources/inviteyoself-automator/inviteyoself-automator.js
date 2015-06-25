@@ -5,6 +5,8 @@ var casper = require('casper').create({
   }
 });
 
+casper.options.waitTimeout = 10000;
+
 var subdomain = casper.cli.get("subdomain"),
   username = casper.cli.get("username"),
   password = casper.cli.get("password"),
@@ -36,7 +38,7 @@ casper.waitFor(function check() {
           set_active: 'true',
           token: TS.boot_data.api_token
         };
-    TS.api.ajax_call(url, method, args, function(data) {
+    TS.api.ajax_call(url, method, args, false, function(data) {
       data.emails.forEach(function(email) {
         var method = 'users.admin.invite',
             unixtime = Math.round(new Date().getTime() / 1000),
@@ -48,7 +50,7 @@ casper.waitFor(function check() {
               set_active: 'true',
               token: TS.boot_data.api_token
             };
-        TS.api.ajax_call(url, method, args, function(data) {
+        TS.api.ajax_call(url, method, args, false, function(data) {
           if (data.ok || data.error == 'sent_recently' || data.error == 'already_invited') {
             document.getElementById('invite_sending_success').style.display = '';
           }
